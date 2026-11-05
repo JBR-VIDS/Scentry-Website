@@ -52,7 +52,8 @@
 
   function renderHeader() {
     var b = S.brand;
-    var links = [['problem', 'The problem'], ['audience', 'Who it is for'], ['product', 'What we build'], ['learning', 'What we learned'], ['progress', 'Where we are']];
+    var links = [['problem', 'Problem'], ['audience', 'Who it is for'], ['product', 'Product'], ['learning', 'Research'], ['progress', 'Progress']];
+    if (S.brand.youtubeChannel || (S.brand.videos && S.brand.videos.length)) links.push(['watch', 'Watch']);
     if (hasTeam()) links.push(['team', 'Team']);
     links.push(['faq', 'Questions']);
     return '<header class="site-header"><div class="wrap header-row">' +
@@ -106,12 +107,23 @@
       '<img data-base="' + esc(base) + '" data-i="0" src="' + esc(base) + '.jpg" alt="" decoding="async" loading="lazy"></figure>';
   }
 
+  function viewerHtml(p) {
+    if (!p.model || !p.model.file) return '';
+    return '<div class="viewer" id="model-viewer" data-src="' + esc(p.model.file) + '">' +
+      '<span class="status-badge">' + esc(p.status) + '</span>' +
+      '<div class="viewer-stage"></div>' +
+      '<p class="viewer-note" role="status">The 3D model shows on the live website.</p>' +
+      '<div class="viewer-bar"><div class="seg" role="group" aria-label="Lid">' +
+        '<button type="button" data-lid="on" aria-pressed="true">Lid on</button><button type="button" data-lid="off" aria-pressed="false">Lid off</button></div>' +
+        '<p class="viewer-cap">' + esc(p.model.caption || '') + '</p></div></div>';
+  }
+
   function renderProduct() {
     var p = S.product;
     return '<section class="section" id="product"><div class="wrap product-grid">' +
       '<div><h2>' + esc(p.title) + '</h2><p class="lead">' + esc(p.lead) + '</p>' +
         '<ul class="goals">' + p.goals.map(function (g) { return '<li><h3>' + esc(g.title) + '</h3><p>' + esc(g.text) + '</p></li>'; }).join('') + '</ul></div>' +
-      '<div class="product-photo">' + slot('photos/product', 'Product or prototype photo') + '<span class="status-badge">' + esc(p.status) + '</span></div>' +
+      '<div class="product-media">' + viewerHtml(p) + '<div class="product-photo">' + slot('photos/product', 'Photo of the printed prototype', 'slot-wide') + '</div></div>' +
     '</div></section>';
   }
 
@@ -134,6 +146,22 @@
       '<ol class="steps">' + p.steps.map(function (s) {
         return '<li class="step step-' + esc(s.status) + '"><span class="step-tag">' + esc(label[s.status] || s.status) + '</span><h3>' + esc(s.title) + '</h3><p>' + esc(s.text) + '</p></li>';
       }).join('') + '</ol></div></section>';
+  }
+
+  function ytId(u) { var m = /(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/.exec(u || ''); return m ? m[1] : ''; }
+  function renderWatch() {
+    var b = S.brand, vids = (b.videos || []).filter(function (v) { return ytId(v.url); });
+    if (!vids.length && !b.youtubeChannel && !showEmpty) return '';
+    var body;
+    if (vids.length) {
+      body = '<div class="videos">' + vids.map(function (v) {
+        var id = ytId(v.url);
+        return '<figure class="video"><a class="video-link" href="https://www.youtube.com/watch?v=' + id + '" target="_blank" rel="noopener" aria-label="Watch: ' + esc(v.title || 'video') + ' on YouTube">' +
+          '<img src="https://i.ytimg.com/vi/' + id + '/hqdefault.jpg" alt="" loading="lazy"><span class="play" aria-hidden="true"></span></a><figcaption>' + esc(v.title || '') + '</figcaption></figure>';
+      }).join('') + '</div>';
+    } else body = '<p class="ph-note">Add your video links in content.js (brand section, "videos") and thumbnails appear here.</p>';
+    return '<section class="section" id="watch"><div class="wrap"><div class="section-head"><h2>Watch</h2><p class="intro">See what we are making and why.</p></div>' + body +
+      (b.youtubeChannel ? '<p class="channel"><a class="btn btn-ghost" href="' + esc(b.youtubeChannel) + '" target="_blank" rel="noopener">Scentry on YouTube</a></p>' : '') + '</div></section>';
   }
 
   function hasTeam() { return (S.teamSection.members && S.teamSection.members.length) || showEmpty; }
@@ -161,7 +189,8 @@
     var c = S.contact, b = S.brand, buttons = '';
     if (b.email) buttons += '<a class="btn btn-light" href="mailto:' + esc(b.email) + '?subject=' + encodeURIComponent('Scentry') + '">Email us</a>';
     if (b.surveyUrl) buttons += '<a class="btn btn-ghost-light" href="' + esc(b.surveyUrl) + '" target="_blank" rel="noopener">Take the survey</a>';
-    if (!buttons && showEmpty) buttons = '<p class="ph-note">Add your email or survey link in content.js (brand section) and the buttons appear here.</p>';
+    if (b.youtubeChannel) buttons += '<a class="btn btn-ghost-light" href="' + esc(b.youtubeChannel) + '" target="_blank" rel="noopener">Watch on YouTube</a>';
+    if (!b.email && !b.surveyUrl && !b.youtubeChannel && showEmpty) buttons = '<p class="ph-note">Add your email or survey link in content.js (brand section) and the buttons appear here.</p>';
     return '<section class="section dark contact" id="contact"><div class="wrap"><h2>' + esc(c.title) + '</h2><p class="intro">' + esc(c.text) + '</p><div class="btn-row">' + buttons + '</div></div></section>';
   }
 
@@ -174,7 +203,7 @@
 
   function render() {
     app.innerHTML = '<a class="skip" href="#main">Skip to content</a>' + renderHeader() +
-      '<main id="main">' + renderHero() + renderProblem() + renderAudience() + renderProduct() + renderLearning() + renderProgress() + renderTeam() + renderFaq() + renderContact() + '</main>' + renderFooter();
+      '<main id="main">' + renderHero() + renderProblem() + renderAudience() + renderProduct() + renderLearning() + renderProgress() + renderWatch() + renderTeam() + renderFaq() + renderContact() + '</main>' + renderFooter();
   }
 
   /* ---------- Photos: hide the dashed box once a photo loads; try png/jpeg/webp if jpg is missing ---------- */

@@ -27,10 +27,14 @@ window.SITE = {
     name: "Scentry",
     tagline: "Odor removal for sports gear.",
     // Your contact email. Leave "" until you want one shown.
-    email: "",
+    email: "Scentry2028@gmail.com",
     // Link to a Google Form survey, or "" to hide the button.
     surveyUrl: "",
     // The incubator program, if you want it credited. Leave name "" to hide.
+    // YouTube: paste the channel link, and the link to each video (up to a few). Leave "" / [] to show a "coming soon" box.
+    //   videos: [ { title: "Meet Scentry", url: "https://www.youtube.com/watch?v=XXXXXXXXXXX" } ]
+    youtubeChannel: "https://www.youtube.com/@Scentry-Official",
+    videos: [],
     incubator: { name: "Incubator EDU", url: "" },   // add the program's web address in url if you want it linked
   },
 
@@ -70,15 +74,15 @@ window.SITE = {
   /* ---------- What Scentry is ---------- */
   product: {
     title: "What we are building",
-    // CONFIRM: describe the product in your own words (what it is, how it is used).
-    lead: "Scentry is a product designed to remove odor from sports gear at the source, not cover it up with perfume.",
-    // CONFIRM: three things you are designing for. Keep them as goals, not guarantees.
+    lead: "Scentry is a two-in-one sprayer for sports gear: one bottle of antibacterial spray, one of mint, and a slider on top that picks which one the button sprays.",
     goals: [
-      { title: "Goes where the smell lives", text: "Built for the inside of shoes, bags, and pads, the spots a washing machine can't reach." },
-      { title: "Easy after every practice", text: "If it takes effort, it won't get used. We are designing for a quick routine." },
-      { title: "Tested before we claim anything", text: "We share what we have actually measured, and we say so when we are still finding out." },
+      { title: "Two solutions, one button", text: "Slide to 1 for the antibacterial spray or 2 for the mint. Raised dimples on top tell you which is which by touch." },
+      { title: "A real lock", text: "Slide to LOCK and the button cannot be pressed. The lid is a second lock, so it is designed not to go off inside a gym bag." },
+      { title: "Built around bottles you can buy", text: "The body is two standard 2 oz spray bottles. We 3D print the frame, selector, and lid, so a bottle is easy to swap or refill." },
     ],
-    status: "Prototype stage",              // small badge on the product photo
+    status: "Prototype V2",              // small badge on the model
+    // The interactive 3D model. Leave file "" to show the photo box instead.
+    model: { file: "models/scentry-model.json", caption: "Our real CAD model. Drag to turn it." },
   },
 
   /* ---------- What we have learned (customer discovery) ---------- */
@@ -106,7 +110,7 @@ window.SITE = {
     steps: [
       { status: "done", title: "Chose the problem", text: "Gear odor, and why washing is not an option." },
       { status: "done", title: "Started customer discovery", text: "Surveys and interviews with athletes, moms, and coaches." },
-      { status: "now",  title: "Building and testing prototypes", text: "Trying ideas and measuring what works." },
+      { status: "now",  title: "Building and testing prototypes", text: "Version 2 of the 3D-printed design, with a fit-test print to check every part." },
       { status: "next", title: "Small pilot with a local team", text: "Real gear, real practices, honest feedback." },
     ],
   },
@@ -129,6 +133,7 @@ window.SITE = {
       // CONFIRM each answer is true today.
       { q: "Can I buy Scentry?", a: "Not yet. We are a student project at the prototype stage. Follow along below and we will share news when there is some." },
       { q: "Who is making it?", a: "A student team, supported by a parent mentor, as part of Incubator EDU." },
+      { q: "What is inside it?", a: "Two standard 2 oz spray bottles, one with an antibacterial solution and one with a mint solution, held in a 3D-printed frame with a slide selector on top." },
       { q: "How can I help?", a: "Answer our short survey, tell us what you have tried on your own gear, or let us test with your team. We especially want to hear from high school athletes, moms, and coaches." },
       { q: "Is it safe?", a: "We will not make safety or performance claims until we have tested them properly. Anything we publish here will say how we know." },
     ],
